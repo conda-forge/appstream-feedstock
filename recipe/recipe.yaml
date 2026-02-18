@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: AppStream
-  version: "1.1.1"
+  version: "1.1.2"
 
 package:
   name: ${{ name|lower }}
@@ -11,10 +11,10 @@ package:
 
 source:
   url: https://www.freedesktop.org/software/${{ name|lower }}/releases/${{ name }}-${{ version }}.tar.xz
-  sha256: 3b9d325074ede328eed4746d0c4fbfc3b8f6f4fdbc9c173ed70e40569a79b117
+  sha256: 46b4257100e25a6468ceed7b3ab82441f47b119da3398d30aea6d7b91174b586
 
 build:
-  number: 1
+  number: 0
   skip:
     - win
   script: |
