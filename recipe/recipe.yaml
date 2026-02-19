@@ -27,14 +27,14 @@ build:
     pkg_config_path = ['$SRC_DIR/native_pkgconfig']
     EOF
         NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
+        cp -f ${BUILD_PREFIX}/bin/glib-mkenums ${PREFIX}/bin/glib-mkenums
+        cp -f ${BUILD_PREFIX}/bin/glib-genmarshal ${PREFIX}/bin/glib-genmarshal
+        for tool in glib-compile-resources gperf; do
+            echo "#!/bin/bash" > ${PREFIX}/bin/${tool}
+            echo "exec ${BUILD_PREFIX}/bin/${tool} \"\$@\"" >> ${PREFIX}/bin/${tool}
+            chmod +x ${PREFIX}/bin/${tool}
+        done
     fi
-    cp -f ${BUILD_PREFIX}/bin/glib-mkenums ${PREFIX}/bin/glib-mkenums
-    cp -f ${BUILD_PREFIX}/bin/glib-genmarshal ${PREFIX}/bin/glib-genmarshal
-    for tool in glib-compile-resources gperf; do
-      echo "#!/bin/bash" > ${PREFIX}/bin/${tool}
-      echo "exec ${BUILD_PREFIX}/bin/${tool} \"\$@\"" >> ${PREFIX}/bin/${tool}
-      chmod +x ${PREFIX}/bin/${tool}
-    done
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
