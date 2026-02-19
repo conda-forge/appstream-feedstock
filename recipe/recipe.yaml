@@ -18,7 +18,18 @@ build:
   skip:
     - win
   script: |
+    NATIVE_FILE_ARGS=""
+    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
+        mkdir -p $SRC_DIR/native_pkgconfig
+        cp $BUILD_PREFIX/lib/pkgconfig/appstream.pc $SRC_DIR/native_pkgconfig/
+        cat <<EOF > $SRC_DIR/meson_native_file.txt
+    [built-in options]
+    pkg_config_path = ['$SRC_DIR/native_pkgconfig']
+    EOF
+        NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
+    fi
     meson setup ${MESON_ARGS} \
+        ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
         --default-library=shared \
         --wrap-mode=nofallback \
