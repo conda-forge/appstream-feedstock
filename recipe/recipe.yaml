@@ -64,6 +64,7 @@ requirements:
     - glib
     - gperf
     - gettext
+    - itstool
     - if: build_platform != target_platform
       then: appstream
   host:
@@ -75,7 +76,6 @@ requirements:
     - libfyaml
     - libxmlb
     - gobject-introspection
-    - itstool
     - python
   run:
     - python
