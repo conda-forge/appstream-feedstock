@@ -66,8 +66,6 @@ tests:
       files:
         - lib/pkgconfig/appstream.pc
         - bin/appstreamcli
-        - share/gir-1.0/AppStream-1.0.gir
-        - lib/girepository-1.0/AppStream-1.0.typelib
       lib:
         - appstream
 
