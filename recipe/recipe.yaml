@@ -30,6 +30,11 @@ build:
     fi
     cp -f ${BUILD_PREFIX}/bin/glib-mkenums ${PREFIX}/bin/glib-mkenums
     cp -f ${BUILD_PREFIX}/bin/glib-genmarshal ${PREFIX}/bin/glib-genmarshal
+    for tool in glib-compile-resources gperf; do
+      echo "#!/bin/bash" > ${PREFIX}/bin/${tool}
+      echo "exec ${BUILD_PREFIX}/bin/${tool} \"\$@\"" >> ${PREFIX}/bin/${tool}
+      chmod +x ${PREFIX}/bin/${tool}
+    done
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
@@ -57,6 +62,7 @@ requirements:
     - gobject-introspection
     - python
     - glib
+    - gperf
     - if: build_platform != target_platform
       then: appstream
   host:
@@ -68,7 +74,6 @@ requirements:
     - libfyaml
     - libxmlb
     - gobject-introspection
-    - gperf
     - gettext
     - itstool
     - python
