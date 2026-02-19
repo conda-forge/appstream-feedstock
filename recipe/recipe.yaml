@@ -28,6 +28,8 @@ build:
     EOF
         NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
     fi
+    cp -f ${BUILD_PREFIX}/bin/glib-mkenums ${PREFIX}/bin/glib-mkenums
+    cp -f ${BUILD_PREFIX}/bin/glib-genmarshal ${PREFIX}/bin/glib-genmarshal
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
