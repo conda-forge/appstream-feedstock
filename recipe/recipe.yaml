@@ -43,6 +43,8 @@ requirements:
     - pkg-config
     - gobject-introspection
     - python
+    - if: build_platform != target_platform
+      then: appstream
   host:
     - glib
     - glib >=2.58
