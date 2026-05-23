@@ -14,33 +14,15 @@ source:
   sha256: 3b9d325074ede328eed4746d0c4fbfc3b8f6f4fdbc9c173ed70e40569a79b117
 
 build:
-  number: 2
+  number: 3
   skip:
     - win
   script: |
-    NATIVE_FILE_ARGS=""
-    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-        mkdir -p $SRC_DIR/native_pkgconfig
-        cp $BUILD_PREFIX/lib/pkgconfig/appstream.pc $SRC_DIR/native_pkgconfig/
-        cat <<EOF > $SRC_DIR/meson_native_file.txt
-    [built-in options]
-    pkg_config_path = ['$SRC_DIR/native_pkgconfig']
-    EOF
-        NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
-        for tool in glib-mkenums glib-genmarshal; do
-            cp -f ${BUILD_PREFIX}/bin/${tool} ${PREFIX}/bin/${tool}
-        done
-        echo '#!/bin/bash' > ${PREFIX}/bin/glib-compile-resources
-        echo "exec ${BUILD_PREFIX}/bin/glib-compile-resources \"\$@\"" >> ${PREFIX}/bin/glib-compile-resources
-        chmod +x ${PREFIX}/bin/glib-compile-resources
-    fi
     meson setup ${MESON_ARGS} \
-        ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
         --default-library=shared \
         --wrap-mode=nofallback \
         -Dc_args="-D_GNU_SOURCE" \
-        -Dgir=false \
         -Ddocs=false \
         -Dapidocs=false \
         -Dman=false \
@@ -64,8 +46,6 @@ requirements:
     - gperf
     - gettext
     - itstool
-    - if: build_platform != target_platform
-      then: appstream
   host:
     - glib
     - glib >=2.58
