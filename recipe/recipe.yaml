@@ -47,6 +47,8 @@ build:
         -Dvapi=false \
         -Dsystemd=false \
         -Dstemming=false \
+        -Dtools=false \
+        -Dbash-completions=false \
         builddir
     ninja -v -C builddir -j ${CPU_COUNT}
     ninja -C builddir install -j ${CPU_COUNT}
@@ -76,6 +78,9 @@ requirements:
     - libxmlb
     - gobject-introspection
     - python
+    - if: linux
+      then:
+        - wayland
   run:
     - python
   run_exports:
