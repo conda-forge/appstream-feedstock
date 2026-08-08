@@ -18,27 +18,6 @@ build:
   skip:
     - win
   script: |
-    NATIVE_FILE_ARGS=""
-    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-        mkdir -p $SRC_DIR/native_pkgconfig
-        cp $BUILD_PREFIX/lib/pkgconfig/appstream.pc $SRC_DIR/native_pkgconfig/
-        cat <<EOF > $SRC_DIR/meson_native_file.txt
-    [built-in options]
-    pkg_config_path = ['$SRC_DIR/native_pkgconfig']
-    EOF
-        NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
-        for tool in glib-mkenums glib-genmarshal; do
-            cp -f ${BUILD_PREFIX}/bin/${tool} ${PREFIX}/bin/${tool}
-        done
-        echo '#!/bin/bash' > ${PREFIX}/bin/glib-compile-resources
-        echo "exec ${BUILD_PREFIX}/bin/glib-compile-resources \"\$@\"" >> ${PREFIX}/bin/glib-compile-resources
-        chmod +x ${PREFIX}/bin/glib-compile-resources
-    fi
-    # libfyaml.pc Libs can contain literal "none required" from a mangled pthread probe
-    if [[ -f "${PREFIX}/lib/pkgconfig/libfyaml.pc" ]]; then
-        sed -i.bak -e '/^Libs:/s/[[:space:]]none[[:space:]]/ /g' -e '/^Libs:/s/[[:space:]]required[[:space:]]/ /g' "${PREFIX}/lib/pkgconfig/libfyaml.pc"
-        rm -f "${PREFIX}/lib/pkgconfig/libfyaml.pc.bak"
-    fi
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
@@ -81,9 +60,7 @@ requirements:
     - libxmlb
     - gobject-introspection
     - python
-    - if: unix
-      then:
-        - bash-completion
+    - bash-completion
     - if: linux
       then:
         - wayland
