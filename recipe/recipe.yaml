@@ -48,8 +48,6 @@ requirements:
     - gperf
     - gettext
     - itstool
-    - if: build_platform != target_platform
-      then: appstream
   host:
     - glib
     - glib >=2.58
