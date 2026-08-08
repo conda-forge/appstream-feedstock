@@ -18,6 +18,11 @@ build:
   skip:
     - win
   script: |
+    # libfyaml.pc Libs can contain literal "none required" from a mangled pthread probe
+    if [[ -f "${PREFIX}/lib/pkgconfig/libfyaml.pc" ]]; then
+        sed -i.bak -e '/^Libs:/s/[[:space:]]none[[:space:]]/ /g' -e '/^Libs:/s/[[:space:]]required[[:space:]]/ /g' "${PREFIX}/lib/pkgconfig/libfyaml.pc"
+        rm -f "${PREFIX}/lib/pkgconfig/libfyaml.pc.bak"
+    fi
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
         --prefix=$PREFIX \
