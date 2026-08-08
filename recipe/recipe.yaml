@@ -81,7 +81,7 @@ requirements:
     - libxmlb
     - gobject-introspection
     - python
-    - if: osx
+    - if: unix
       then:
         - bash-completion
     - if: linux
