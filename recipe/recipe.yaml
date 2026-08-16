@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: AppStream
-  version: "1.1.1"
+  version: "1.1.5"
 
 package:
   name: ${{ name|lower }}
@@ -11,28 +11,17 @@ package:
 
 source:
   url: https://www.freedesktop.org/software/${{ name|lower }}/releases/${{ name }}-${{ version }}.tar.xz
-  sha256: 3b9d325074ede328eed4746d0c4fbfc3b8f6f4fdbc9c173ed70e40569a79b117
+  sha256: fc57337e250b0d27e75ac4216cc69a76d03c54011a5da5c7a2c57711a3d0cdf9
 
 build:
-  number: 2
+  number: 0
   skip:
     - win
   script: |
-    NATIVE_FILE_ARGS=""
-    if [[ "${CONDA_BUILD_CROSS_COMPILATION:-0}" == "1" ]]; then
-        mkdir -p $SRC_DIR/native_pkgconfig
-        cp $BUILD_PREFIX/lib/pkgconfig/appstream.pc $SRC_DIR/native_pkgconfig/
-        cat <<EOF > $SRC_DIR/meson_native_file.txt
-    [built-in options]
-    pkg_config_path = ['$SRC_DIR/native_pkgconfig']
-    EOF
-        NATIVE_FILE_ARGS="--native-file=$SRC_DIR/meson_native_file.txt"
-        for tool in glib-mkenums glib-genmarshal; do
-            cp -f ${BUILD_PREFIX}/bin/${tool} ${PREFIX}/bin/${tool}
-        done
-        echo '#!/bin/bash' > ${PREFIX}/bin/glib-compile-resources
-        echo "exec ${BUILD_PREFIX}/bin/glib-compile-resources \"\$@\"" >> ${PREFIX}/bin/glib-compile-resources
-        chmod +x ${PREFIX}/bin/glib-compile-resources
+    # libfyaml.pc Libs can contain literal "none required" from a mangled pthread probe
+    if [[ -f "${PREFIX}/lib/pkgconfig/libfyaml.pc" ]]; then
+        sed -i.bak -e '/^Libs:/s/[[:space:]]none[[:space:]]/ /g' -e '/^Libs:/s/[[:space:]]required[[:space:]]/ /g' "${PREFIX}/lib/pkgconfig/libfyaml.pc"
+        rm -f "${PREFIX}/lib/pkgconfig/libfyaml.pc.bak"
     fi
     meson setup ${MESON_ARGS} \
         ${NATIVE_FILE_ARGS} \
@@ -64,8 +53,6 @@ requirements:
     - gperf
     - gettext
     - itstool
-    - if: build_platform != target_platform
-      then: appstream
   host:
     - glib
     - glib >=2.58
@@ -76,6 +63,10 @@ requirements:
     - libxmlb
     - gobject-introspection
     - python
+    - bash-completion
+    - if: linux
+      then:
+        - wayland
   run:
     - python
   run_exports:
