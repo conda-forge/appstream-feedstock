@@ -12,9 +12,12 @@ package:
 source:
   url: https://www.freedesktop.org/software/${{ name|lower }}/releases/${{ name }}-${{ version }}.tar.xz
   sha256: 3b9d325074ede328eed4746d0c4fbfc3b8f6f4fdbc9c173ed70e40569a79b117
+  patches:
+    # https://github.com/ximion/appstream/pull/789
+    - portable-pc-fixup.patch
 
 build:
-  number: 2
+  number: 3
   skip:
     - win
   script: |
@@ -59,7 +62,6 @@ requirements:
     - ninja
     - pkg-config
     - gobject-introspection
-    - python
     - glib
     - gperf
     - gettext
@@ -75,9 +77,6 @@ requirements:
     - libfyaml
     - libxmlb
     - gobject-introspection
-    - python
-  run:
-    - python
   run_exports:
     - ${{ pin_subpackage('appstream', upper_bound='x.x') }}
 
@@ -91,7 +90,7 @@ tests:
 
 about:
   homepage: https://www.freedesktop.org/wiki/Distributions/AppStream/
-  summary: 'Tools and libraries to work with AppStream metadata'
+  summary: "Tools and libraries to work with AppStream metadata"
   description: |
     AppStream makes machine-readable software metadata
     easily accessible. It is a foundational block for
