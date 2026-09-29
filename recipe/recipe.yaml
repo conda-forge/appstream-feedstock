@@ -3,7 +3,7 @@ schema_version: 1
 
 context:
   name: AppStream
-  version: "1.1.1"
+  version: "1.2.1"
 
 package:
   name: ${{ name|lower }}
@@ -11,13 +11,13 @@ package:
 
 source:
   url: https://www.freedesktop.org/software/${{ name|lower }}/releases/${{ name }}-${{ version }}.tar.xz
-  sha256: 3b9d325074ede328eed4746d0c4fbfc3b8f6f4fdbc9c173ed70e40569a79b117
+  sha256: 7df664fd3ad3b1640c6a0ff77fa84f9fabe264111bf1fe8f5df3444d6d4caaca
   patches:
     # https://github.com/ximion/appstream/pull/789
     - portable-pc-fixup.patch
 
 build:
-  number: 3
+  number: 0
   skip:
     - win
   script: |
