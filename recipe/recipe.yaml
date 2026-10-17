@@ -74,6 +74,9 @@ requirements:
     - libfyaml
     - libxmlb
     - gobject-introspection
+    - bash-completion
+    - if: linux
+      then: wayland
   run_exports:
     - ${{ pin_subpackage('appstream', upper_bound='x.x') }}
 
