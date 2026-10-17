@@ -12,9 +12,6 @@ package:
 source:
   url: https://www.freedesktop.org/software/${{ name|lower }}/releases/${{ name }}-${{ version }}.tar.xz
   sha256: 7df664fd3ad3b1640c6a0ff77fa84f9fabe264111bf1fe8f5df3444d6d4caaca
-  patches:
-    # https://github.com/ximion/appstream/pull/789
-    - portable-pc-fixup.patch
 
 build:
   number: 0
